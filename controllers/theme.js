@@ -70,29 +70,25 @@ function updateTheme (req, res) {
 
 function getTheme(req, res){
     if (req.params.id === "0") {
-        return res.status(200).send({option: {}, message: '', error: 0});
+        return res.status(200).send({theme: {}, message: '', error: 0});
     } else {
         var id = mongoose.Types.ObjectId(req.params.id);
-        OptionMenu.find({ _id: id })
-            .populate({path:'module'})
-            .exec((err, option) => {
+        Theme.find({ _id: id })
+            .exec((err, theme) => {
             if(err) return res.status(500).send({message:'Error en la peticion.'});
 
-            if(!option) return res.status(200).send({message:'La Opción '+ publicationTitle +' no existe.', error: 1});
+            if(!theme) return res.status(200).send({message:'La tematica no existe.', error: 1});
 
-            return res.status(200).send({option: option, message: '', error: 0});
+            return res.status(200).send({theme: theme, message: '', error: 0});
         });
     }
 }
 
 function getThemes(req, res){
-    OptionMenu.find({})
-    .populate({path:'module'})
-    .exec((err, options) => {
-        console.log(err)
+    Theme.find({})
+    .exec((err, themes) => {
         if(err) return res.status(500).send({message:'Error en la peticion.'});
-
-        return res.status(200).send({options: options, message: '', error: 0});
+        return res.status(200).send({themes: themes, message: '', error: 0});
     });
 }
 

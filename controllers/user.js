@@ -76,30 +76,31 @@ function loginUser(req, res){
     }
     
     if (email && password) {
-        User.findOne({email : email}, (err, user) => {
+        User.findOne({email : email})
+        .populate({path:'role'})
+        .exec((err, user) => {
             var errorPass = false;
             if(err) return res.status(500).send({message:'Error en la peticion'});
             if(user){
-    
+                
                 if (params.validation) {
-                    if (user.password !== password) {
+                    if (user.password !== password.toString()) {
                         errorPass = !errorPass;
                     }
                 } else {
-                    bcrypt.compare(password, user.password, (err, check) => {
+                    bcrypt.compare(password.toString(), user.password, (err, check) => {
                         if(!check){
                             errorPass = !errorPass;  
-                        } 
+                        }
+
+                        if (errorPass) {
+                            return res.status(400).send({message:'El password es incorrecto. Revise el password capturado.'})
+                        }
+            
+                        var token = jwt.createToken(user);
+                        return res.status(200).send({user: user, token: token});
                     });
                 }
-    
-                if (errorPass) {
-                    return res.status(400).send({message:'El password es incorrecto. Revise el password capturado.'})
-                }
-    
-                var token = jwt.createToken(user);
-                return res.status(200).send({user: user, token: token});
-                
             } else {
                 return res.status(400).send({message:'El usuario no existe. Revise el usuario capturado!!.'}) 
             }

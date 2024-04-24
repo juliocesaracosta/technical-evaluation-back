@@ -27,7 +27,7 @@ function saveRole(req, res) {
                 });
             } else {
                 res.status(200).send({
-                    message: 'Se gurdo correctamente el rol.',
+                    message: 'Se guardo correctamente el rol.',
                     rol: roleStore
                 }); 
             }
