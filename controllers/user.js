@@ -31,8 +31,8 @@ function saveUser(req, res){
                     user.token = jwt.createToken(user);
 
                     user.save((err, userStored) => {
-                        
-                        if(err) return res.status(500).send({message:'Error al guardar el usuario.'});
+                        console.log(err);
+                        if(err) return res.status(500).send({message:'Error al guardar el usuario.' + err});
                         
                         if(userStored){
                             res.status(200).send({user: userStored});
