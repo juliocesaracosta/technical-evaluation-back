@@ -3,15 +3,16 @@ var bcrypt = require('bcrypt');
 var User = require('../models/user');
 var jwt = require('../services/jwt');
 var moment = require('moment');
+var mongoose = require('mongoose');
 const saltRounds = 10;
 
 function saveUser(req, res){
     var params = req.body;
     var user = new User();
-
     if(params.name){
         user.name = params.name;
         user.email = params.email;
+        user.rol = mongoose.Types.ObjectId(params.rol)
         // controlar usuarios duplicados
         User.find({ $or: [
             {email: user.email.toLowerCase()},
@@ -21,7 +22,7 @@ function saveUser(req, res){
             if(err) return res.status(500).send({message:'Error en la petición.'});
 
             if(users && users.length >= 1){
-                return res.status(200).send({message: 'Usuario ya se encuentra registrado.'});
+                return res.status(500).send({message: 'Usuario ya se encuentra registrado.'});
             } else {
                 bcrypt.hash(params.password, saltRounds, (err, hash) => {
                     user.password = hash;
@@ -77,7 +78,7 @@ function loginUser(req, res){
     
     if (email && password) {
         User.findOne({email : email})
-        .populate({path:'role'})
+        .populate({path:'rol'})
         .exec((err, user) => {
             var errorPass = false;
             if(err) return res.status(500).send({message:'Error en la peticion'});
