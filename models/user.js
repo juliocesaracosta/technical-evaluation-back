@@ -3,6 +3,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+
+
 var UserSchema = Schema({
     name : {type: String, required: [true, 'El nombre de usuario es requerido.']},
     email: {
@@ -18,8 +20,12 @@ var UserSchema = Schema({
     password : {
         type: String,
         required: [true, 'El password es requerido.'],
-        minLength: [4, 'El mínimo de caracteres para el password es de 4.'],
-        maxLength: [8, 'El máximo de caracteres para el password es de 8.']
+        // validate: {
+        //     validator: function(v) {
+        //         return v.length >= 4 && v.length <= 8;
+        //     },
+        //     message: 'El password debe estar mínimo 4 y máximo 8.'
+        // }
     },
     date: Date,
     rol:{
@@ -32,6 +38,7 @@ var UserSchema = Schema({
     toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
     toObject: { virtuals: true } // So `console.log()` and other functions that use `toObject()` include virtuals
 });
+
 
 
 module.exports = mongoose.model('User', UserSchema);

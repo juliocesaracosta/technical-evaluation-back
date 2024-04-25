@@ -12,7 +12,7 @@ function saveUser(req, res){
     if(params.name){
         user.name = params.name;
         user.email = params.email;
-        user.rol = mongoose.Types.ObjectId(params.rol)
+        user.rol = mongoose.Types.ObjectId(params.rol);
         // controlar usuarios duplicados
         User.find({ $or: [
             {email: user.email.toLowerCase()},
